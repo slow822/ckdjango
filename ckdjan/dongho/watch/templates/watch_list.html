@@ -1,0 +1,235 @@
+{% comment %} {% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Watch Store - Châu JR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border: none;
+        }
+        .card-title, .card-text {
+            color: #fff;
+        }
+        .btn-gold {
+            background-color: #FFD700;
+            color: #000;
+            border: none;
+        }
+        .btn-gold:hover {
+            background-color: #e6c200;
+            color: #000;
+        }
+        .modal-content {
+            background-color: #1e1e1e;
+        }
+        .banner {
+            background-image: url('{% static "assets/banner.webp" %}');
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+            position: relative;
+        }
+        .banner-overlay {
+            background-color: rgba(0, 0, 0, 0.6);
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        .banner-content {
+            z-index: 1;
+        }
+        .modal-body {
+            padding: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="banner text-white text-center d-flex align-items-center justify-content-center position-relative">
+    <div class="banner-overlay"></div>
+    <div class="banner-content position-relative">
+        <h1 class="display-4 fw-bold text-warning">Đồng Hồ Châu JR</h1>
+    </div>
+</div>
+
+<div id="product-section" class="container py-5">
+    <h2 class="text-center text-warning mb-5">Bộ sưu tập đồng hồ cao cấp</h2>
+    <div class="row">
+        {% for watch in watches %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                {% if watch.image %}
+                <img src="{{ watch.image.url }}" class="card-img-top" style="height: 250px; object-fit: cover;" alt="{{ watch.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ watch.name }}</h5>
+                    <p class="card-text">Thương hiệu: {{ watch.brand }}</p>
+                    <p class="card-text">Giá: <strong class="text-warning">{{ watch.price|floatformat:0 }}₫</strong></p>
+                    <p class="card-text text-muted" style="font-size: 0.9rem;">{{ watch.description|truncatewords:20 }}</p>
+                </div>
+                <div class="card-footer text-center bg-transparent border-0">
+                    <a href="{% url 'watch_detail' watch.id %}" class="btn btn-gold">Xem chi tiết</a>
+                        Xem chi tiết
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Chi tiết -->
+        <div class="modal fade" id="watchModal{{ watch.id }}" tabindex="-1" aria-labelledby="modalLabel{{ watch.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content text-white">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title text-warning" id="modalLabel{{ watch.id }}">{{ watch.name }}</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% if watch.image %}
+                                <img src="{{ watch.image.url }}" alt="{{ watch.name }}" class="img-fluid rounded shadow-sm">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Thương hiệu:</strong> {{ watch.brand }}</p>
+                                <p><strong>Giá:</strong> <span class="text-warning fw-bold">{{ watch.price|floatformat:0 }}₫</span></p>
+                                <p><strong>Mô tả chi tiết:</strong></p>
+                                <p>{{ watch.description }}</p>
+                                <button class="btn btn-gold mt-3">🛒 Mua ngay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="text-center text-white bg-dark py-4">
+    <div class="container">
+        <p class="mb-0">© 2023 Đồng Hồ Châu JR. All rights reserved.</p>
+        <p class="mb-0">Designed by Châu JR</p>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html> {% endcomment %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đồng Hồ Châu JR</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+        }
+        .navbar {
+            background-color: #111;
+        }
+        .navbar-brand {
+            color: gold;
+            font-weight: bold;
+        }
+        .banner {
+            background: url('{% static "assets/banner.webp" %}') no-repeat center center/cover;
+            height: 400px;
+            position: relative;
+        }
+        .banner-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .banner-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .card {
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .btn-gold {
+            background-color: gold;
+            color: black;
+            font-weight: bold;
+        }
+        footer {
+            background-color: #111;
+        }
+        .search-box {
+            max-width: 500px;
+            margin: 30px auto;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="#">Châu JR Watch</a>
+  </div>
+</nav>
+
+<div class="banner">
+    <div class="banner-overlay"></div>
+    <div class="banner-content text-white text-center">
+        <h1 class="display-4 text-warning">Bộ sưu tập đồng hồ cao cấp</h1>
+        <p class="lead">Phong cách - Đẳng cấp - Lí tưởng</p>
+    </div>
+</div>
+
+<div class="search-box text-center">
+    <form method="get" action="">
+        <input type="text" name="q" class="form-control form-control-lg" placeholder="Tìm kiếm đồng hồ...">
+    </form>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        {% for watch in watches %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if watch.image %}
+                <img src="{{ watch.image.url }}" class="card-img-top" style="height: 250px; object-fit: cover;" alt="{{ watch.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ watch.name }}</h5>
+                    <p class="card-text">Thương hiệu: {{ watch.brand }}</p>
+                    <p class="card-text">Giá: <strong class="text-warning">{{ watch.price|floatformat:0 }} ₫</strong></p>
+                    <a href="{% url 'watch_detail' watch.id %}" class="btn btn-gold mt-2">Xem chi tiết</a>
+                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<footer class="text-center text-white py-4">
+    <p class="mb-0">&copy; 2025 Châu JR Watch. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
